@@ -1,13 +1,45 @@
 package com.todolist.todolist.schedule;
 
-import java.util.List;
+import com.todolist.todolist.exception.EmptyMessageException;
+import com.todolist.todolist.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public class Scheduler {
-	public Task addTask(String message) {
-		return new Task(message);
+	private TaskRepository taskRepository = new TaskRepository();
+
+	public Task addTask(User user, String message) {
+		if (message == null) {
+			throw new EmptyMessageException();
+		}
+		return taskRepository.save(new Task(user, message));
 	}
 
-	public List<Task> listAll() {
-		return null;
+	public Task getTask(Long taskId) {
+		return taskRepository.findByTaskId(taskId);
+	}
+
+	public Page<Task> paging(User user, Pageable pageable) {
+		return taskRepository.findByUserPaging(user, pageable);
+	}
+
+	public void modifyMessage(Long taskId, String message) {
+		Task task = taskRepository.findByTaskId(taskId);
+		task.setMessage(message);
+		taskRepository.update(task);
+	}
+
+	public void referenceTask(Long parentTaskId, Long childTaskId) {
+		Task parentTask = taskRepository.findByTaskId(parentTaskId);
+		Task childTask = taskRepository.findByTaskId(childTaskId);
+
+		parentTask.reference(childTask);
+	}
+
+	public void unreferencedTask(Long parentTaskId, Long childTaskId) {
+		Task parentTask = taskRepository.findByTaskId(parentTaskId);
+		Task childTask = taskRepository.findByTaskId(childTaskId);
+
+		parentTask.unreferenced(childTask);
 	}
 }
