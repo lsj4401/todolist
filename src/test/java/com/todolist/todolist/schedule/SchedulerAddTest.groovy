@@ -1,13 +1,14 @@
 package com.todolist.todolist.schedule
 
 import com.todolist.todolist.exception.EmptyMessageException
+import com.todolist.todolist.schedule.repository.InMemoryTaskRepositoryImpl
 import com.todolist.todolist.user.User
 import spock.lang.Shared
 
 class SchedulerAddTest extends TestBase {
 
 	@Shared String message = "오늘은 청소를 한다."
-	TaskRepository taskRepository = new TaskRepository()
+	InMemoryTaskRepositoryImpl taskRepository = new InMemoryTaskRepositoryImpl()
 	Scheduler scheduler = new Scheduler(
 			taskRepository: taskRepository
 	)

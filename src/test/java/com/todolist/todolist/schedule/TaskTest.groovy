@@ -1,5 +1,7 @@
 package com.todolist.todolist.schedule
 
+import org.joda.time.LocalDateTime
+
 class TaskTest extends TestBase {
 
 	def "default value"() {
@@ -20,5 +22,18 @@ class TaskTest extends TestBase {
 		task1Id | task2Id | expected
 		1L      | 1L      | true
 		1L      | 2L      | false
+	}
+
+	def "update"() {
+		Date before = LocalDateTime.now().minusDays(1).toDate()
+
+		Task task = createTask(1L)
+		task.setUpdatedAt(before)
+
+		when: "업데이트를 한다."
+		task.onUpdate()
+
+		then: "업데이트 날짜가 변경된다."
+		task.getUpdatedAt().getTime() > before.getTime()
 	}
 }
