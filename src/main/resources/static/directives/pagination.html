@@ -1,0 +1,13 @@
+<nav aria-label="Page navigation example">
+  <ul class="pagination" ng-show="pageInfo.totalElements > 0">
+    <li class="page-item">
+      <a class="page-link" href="" ng-click="pageInfo.first ? noop() : goPage({page: pageInfo.number - 1})">Previous</a>
+    </li>
+    <li class="page-item" ng-class="{'active': n == pageInfo.number}" ng-repeat="n in pagesInRange(pageInfo.number, pageInfo.totalPages)">
+      <a class="page-link" href="" ng-click="n != pageInfo.number ? goPage({page: n}) : noop()">{{ n + 1 }}</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="" ng-click="pageInfo.last ? noop() : goPage({page: pageInfo.number + 1})">Next</a>
+    </li>
+  </ul>
+</nav>

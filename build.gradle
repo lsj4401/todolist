@@ -25,15 +25,19 @@ repositories {
 
 
 dependencies {
+	compileOnly('org.projectlombok:lombok')
 	compile('org.springframework.boot:spring-boot-starter-aop')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-freemarker')
 	compile('org.springframework.boot:spring-boot-starter-jdbc')
 	compile('org.springframework.boot:spring-boot-starter-web')
-	runtime('com.h2database:h2')
-	compileOnly('org.projectlombok:lombok')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-	//	Spock 테스트
+	compile('com.h2database:h2')
+	compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '2.0.4.RELEASE'
+
+	compile group: 'com.google.guava', name: 'guava', version: '26.0-jre'
+	compile group: 'joda-time', name: 'joda-time', version: '2.10'
+
 	testCompile('org.spockframework:spock-core:1.1-groovy-2.4')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.spockframework:spock-spring:1.1-groovy-2.4')
 }
