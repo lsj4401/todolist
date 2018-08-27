@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TaskRepository {
-	List<Task> tasks = new ArrayList<>();
+	private List<Task> tasks = new ArrayList<>();
 
 	public Task save(Task task) {
 		task.setTaskId(1L + (long) (Math.random() * (10L - 1L)));
@@ -34,12 +34,14 @@ public class TaskRepository {
 		List<Task> usersTasks = tasks.stream().filter(task -> task.getUser().equals(user)).collect(Collectors.toList());
 		List<List<Task>> partition = Lists.partition(usersTasks, pageable.getPageSize());
 		if (partition.size() > pageable.getPageNumber()) {
-			return new PageImpl<>(partition.get(pageable.getPageNumber()));
+			return new PageImpl<>(partition.get(pageable.getPageNumber()), pageable, tasks.size());
 		}
-		return new PageImpl<>(Collections.emptyList());
+		return new PageImpl<>(Collections.emptyList(), pageable, tasks.size());
 	}
 
-	public void update(Task task) {
+	public Task update(Task task) {
 		// updateTask
+
+		return task;
 	}
 }

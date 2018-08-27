@@ -1,13 +1,8 @@
 package com.todolist.todolist.schedule
 
 import com.todolist.todolist.exception.ReferenceException
-import com.todolist.todolist.user.User
-import spock.lang.Shared
-import spock.lang.Specification
 
-class TaskReferenceTest extends Specification {
-
-	@Shared User user = new User()
+class TaskReferenceTest extends TestBase {
 
 	def "task with ref"() {
 		Task parentTask = createTask(1L)
@@ -65,14 +60,33 @@ class TaskReferenceTest extends Specification {
 		when: "참조를 끊는다."
 		parentTask.unreferenced(refTask)
 
-		then:
+		then: "참조가 부모자식 모두 제거된다."
 		!parentTask.getChildTasks().contains(parentTask)
 		!refTask.getChildTasks().contains(parentTask)
 	}
 
-	private Task createTask(long taskId) {
-		def task = new Task(user, "")
-		task.setTaskId(taskId)
-		return task
+
+	def "parent referenced"() {
+		Task parentTask1 = createTask(1L)
+		Task parentTask2 = createTask(2L)
+		Task refTask = createTask(3L)
+		parentTask1.reference(refTask)
+		parentTask2.reference(refTask)
+
+		when: "참조 목록을 @id 형태로 보여준다."
+		String numbers = refTask.getParentTaskNumbers()
+
+		then: "참조된 부모의 목록이 표시된다."
+		numbers == "@1 @2"
+	}
+
+	def "parent referenced empty"() {
+		Task refTask = createTask(3L)
+
+		when: "참조가 없는 상태에서 참조 목록을 호출한다."
+		String numbers = refTask.getParentTaskNumbers()
+
+		then: "아무것도 표시되지 않는다."
+		numbers == ""
 	}
 }

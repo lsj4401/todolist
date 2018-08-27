@@ -1,5 +1,6 @@
 package com.todolist.todolist.schedule;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.todolist.todolist.exception.NotCompletedException;
 import com.todolist.todolist.exception.ReferenceException;
 import com.todolist.todolist.user.User;
@@ -10,9 +11,10 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
-@ToString(exclude = {"parentTasks", "childTasks"})
+@ToString(exclude = {"childTasks"})
 @EqualsAndHashCode(of = "taskId")
 public class Task {
 	private Long taskId;
@@ -20,6 +22,7 @@ public class Task {
 	private String message;
 	private boolean isCompleted;
 	private List<Task> parentTasks = new ArrayList<>();
+	@JsonIgnore
 	private List<Task> childTasks = new ArrayList<>();
 	private Date createdAt = new Date();
 	private Date updatedAt = new Date();
@@ -33,7 +36,7 @@ public class Task {
 		childTask.addParentTask(this);
 		childTasks.add(childTask);
 		if (isRecursive(parentTasks)) {
-			throw new ReferenceException();
+			throw new ReferenceException("순환 참조되고 있습니다.");
 		}
 	}
 
@@ -56,5 +59,13 @@ public class Task {
 		}
 
 		isCompleted = true;
+	}
+
+	public String getParentTaskNumbers() {
+		if (parentTasks.isEmpty()) {
+			return "";
+		}
+
+		return "@" + String.join(" @", parentTasks.stream().map(task -> task.getTaskId().toString()).collect(Collectors.toList()));
 	}
 }

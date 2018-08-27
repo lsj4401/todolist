@@ -4,7 +4,9 @@ import com.todolist.todolist.exception.EmptyMessageException;
 import com.todolist.todolist.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
+@Service
 public class Scheduler {
 	private TaskRepository taskRepository = new TaskRepository();
 
@@ -23,10 +25,10 @@ public class Scheduler {
 		return taskRepository.findByUserPaging(user, pageable);
 	}
 
-	public void modifyMessage(Long taskId, String message) {
+	public Task modifyMessage(Long taskId, String message) {
 		Task task = taskRepository.findByTaskId(taskId);
 		task.setMessage(message);
-		taskRepository.update(task);
+		return taskRepository.update(task);
 	}
 
 	public void referenceTask(Long parentTaskId, Long childTaskId) {
@@ -41,5 +43,12 @@ public class Scheduler {
 		Task childTask = taskRepository.findByTaskId(childTaskId);
 
 		parentTask.unreferenced(childTask);
+	}
+
+	public Task completeTask(Long taskId) {
+		Task task = taskRepository.findByTaskId(taskId);
+		task.complete();
+
+		return task;
 	}
 }

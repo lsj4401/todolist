@@ -1,12 +1,10 @@
 package com.todolist.todolist.schedule
 
 import com.todolist.todolist.exception.NotCompletedException
-import com.todolist.todolist.user.User
-import spock.lang.Specification
 
-class TaskCompleteTest extends Specification {
+class TaskCompleteTest extends TestBase {
 	def "complete task"() {
-		Task task = new Task(new User(), "")
+		Task task = createTask(1L)
 
 		when: "참조가 없는 할일을 완료 한다"
 		task.complete()
@@ -16,8 +14,8 @@ class TaskCompleteTest extends Specification {
 	}
 
 	def "complete task with completed task"() {
-		Task task = new Task(new User(), "")
-		Task refTask = new Task(new User(), "")
+		Task task = createTask(1L)
+		Task refTask = createTask(2L)
 		refTask.setCompleted(true)
 
 		when: "참조가 완료된 할일을 완료 한다"
@@ -28,13 +26,10 @@ class TaskCompleteTest extends Specification {
 	}
 
 	def "complete task with mixed task"() {
-		Task task = new Task(new User(), "")
-		task.setTaskId(1L)
-		Task refTask1 = new Task(new User(), "")
-		refTask1.setTaskId(2L)
+		Task task = createTask(1L)
+		Task refTask1 = createTask(2L)
 		refTask1.setCompleted(true)
-		Task refTask2 = new Task(new User(), "")
-		refTask2.setTaskId(3L)
+		Task refTask2 = createTask(3L)
 		refTask2.setCompleted(false)
 		task.reference(refTask1)
 		task.reference(refTask2)
@@ -46,11 +41,9 @@ class TaskCompleteTest extends Specification {
 		thrown NotCompletedException
 	}
 
-	def "complete with with no completed task"() {
-		Task parentTask = new Task(new User(), "")
-		parentTask.setTaskId(1L)
-		Task refTask = new Task(new User(), "")
-		refTask.setTaskId(2L)
+	def "complete with no completed task"() {
+		Task parentTask = createTask(1L)
+		Task refTask = createTask(2L)
 		refTask.setCompleted(false)
 
 		parentTask.reference(refTask)
