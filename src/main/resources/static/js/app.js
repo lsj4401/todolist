@@ -3,6 +3,10 @@ var todoListApp = angular.module('app', []);
 todoListApp.controller('appController', function PhoneListController($scope, $http) {
   var URL = '/schedule';
 
+  var alertMessage = function(reason) {
+    alert(reason.data.message);
+  };
+
   $scope.init = function () {
     $scope.paging.list();
   };
@@ -18,7 +22,7 @@ todoListApp.controller('appController', function PhoneListController($scope, $ht
       $http.get(URL + '?size=' + this.size + '&page=' + pNumber).then(function (value) {
         $scope.tasks = value;
         $scope.paging.totalPages = value.data.totalPages;
-      });
+      }, alertMessage);
     }
   };
 
@@ -27,7 +31,7 @@ todoListApp.controller('appController', function PhoneListController($scope, $ht
     create: function () {
       $http.post(URL, this.message).then(function (response) {
         $scope.paging.list();
-      });
+      }, alertMessage);
     }
   };
 
@@ -37,7 +41,7 @@ todoListApp.controller('appController', function PhoneListController($scope, $ht
       $http.put(URL + '/complete/' + taskId).then(function (value) {
         alert('success');
         $scope.paging.list();
-      });
+      }, alertMessage);
     }
   };
 
@@ -50,18 +54,21 @@ todoListApp.controller('appController', function PhoneListController($scope, $ht
       this.targetTask = task;
       this.title = 'modify task :' + task.taskId;
       this.message = task.message;
+      this.refId = '';
     },
     updateMessage: function () {
       $http.put(URL + "/message/" + this.targetTask.taskId, this.message).then(function (value) {
+        angular.element("#modifyModal").modal("hide");
         alert('success');
         $scope.paging.list();
-      });
+      }, alertMessage);
     },
     updateRefTask: function () {
       $http.put(URL + "/reference?parentTaskId=" + this.refId + '&childTaskId=' + this.targetTask.taskId).then(function (value) {
         alert('success');
+        angular.element("#modifyModal").modal("hide");
         $scope.paging.list();
-      });
+      }, alertMessage);
     }
   }
 });

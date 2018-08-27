@@ -20,12 +20,13 @@
 <body ng-controller="appController" ng-init="init()">
 <div class="container">
   <div class="col-12">
-    <div class="input-group">
+    <form class="input-group" ng-submit="taskMaker.create()">
       <input ng-model="taskMaker.message" type="text" class="form-control" placeholder="schedule message">
       <div class="input-group-append">
         <button ng-click="taskMaker.create()" class="btn btn-outline-secondary" type="button">create</button>
       </div>
-    </div>
+    </form>
+    <br>
     <div class="col-12">
       <table class="table">
         <thead>
@@ -78,7 +79,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text">ref Id</span>
               </div>
-              <input class="form-control" ng-model="modifyModal.refId" type="text" />
+              <input type="number" min="0" class="form-control" ng-model="modifyModal.refId" />
               <div class="input-group-prepend">
                 <button class="btn btn-outline-secondary" type="button" ng-click="modifyModal.updateRefTask()">Modify</button>
               </div>
