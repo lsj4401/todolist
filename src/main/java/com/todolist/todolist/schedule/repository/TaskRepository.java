@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface TaskRepository {
 	Task save(Task task);
+
 	Task findByTaskId(Long taskId);
+
 	Page<Task> findByUserOrderByCreatedAtDesc(User user, Pageable pageable);
 }

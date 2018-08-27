@@ -10,6 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.todolist.todolist.utils.Constansts.EMPTY_MESSAGE;
+import static com.todolist.todolist.utils.Constansts.NO_SEARCH_TASK;
+
 @Service
 public class Scheduler {
 	@Autowired
@@ -18,7 +21,7 @@ public class Scheduler {
 	@Transactional
 	public Task addTask(User user, String message) {
 		if (message == null) {
-			throw new EmptyMessageException();
+			throw new EmptyMessageException(EMPTY_MESSAGE);
 		}
 		return taskRepository.save(new Task(user, message));
 	}
@@ -68,7 +71,7 @@ public class Scheduler {
 
 	private void nullCheck(Task parentTask, Task childTask) {
 		if (parentTask == null || childTask == null) {
-			throw new ReferenceException("할일을 찾을 수 없습니다.");
+			throw new ReferenceException(NO_SEARCH_TASK);
 		}
 	}
 

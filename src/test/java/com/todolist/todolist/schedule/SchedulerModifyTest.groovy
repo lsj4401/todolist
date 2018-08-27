@@ -75,15 +75,15 @@ class SchedulerModifyTest extends Specification {
 	def "complete"() {
 		Task task = scheduler.addTask(user, message)
 
-		when: "할일을 완료 시킨다."
+		when: "할 일을 완료 시킨다."
 		scheduler.completeTask(task.getTaskId())
 
-		then: "할일이 완료된다."
+		then: "할 일이 완료된다."
 		scheduler.getTask(task.getTaskId()).isCompleted()
 	}
 
 	def "empty complete"() {
-		when: "할일을 완료 시킨다."
+		when: "할 일을 완료 시킨다."
 		scheduler.completeTask(999L)
 
 		then: "완료할 수 없다."
