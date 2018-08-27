@@ -14,8 +14,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.todolist.todolist.utils.Constansts.NOT_COMPLETED_TASK;
+import static com.todolist.todolist.utils.Constansts.RECURSIVE_REF;
+
 @Data
-@ToString(exclude = {"childTasks"})
+@ToString(exclude = { "childTasks" })
 @EqualsAndHashCode(of = "taskId")
 @Entity
 public class Task {
@@ -29,11 +32,11 @@ public class Task {
 	private String message;
 	private boolean isCompleted;
 
-	@ManyToMany( cascade = { CascadeType.ALL } )
+	@ManyToMany(cascade = { CascadeType.ALL })
 	private List<Task> parentTasks = new ArrayList<>();
 
 	@JsonIgnore
-	@ManyToMany( cascade = { CascadeType.ALL } )
+	@ManyToMany(cascade = { CascadeType.ALL })
 	private List<Task> childTasks = new ArrayList<>();
 	private Date createdAt = new Date();
 	private Date updatedAt = new Date();
@@ -47,7 +50,7 @@ public class Task {
 		childTask.addParentTask(this);
 		childTasks.add(childTask);
 		if (isRecursive(parentTasks)) {
-			throw new ReferenceException("순환 참조되고 있습니다.");
+			throw new ReferenceException(RECURSIVE_REF);
 		}
 	}
 
@@ -66,7 +69,7 @@ public class Task {
 
 	public void complete() {
 		if (!childTasks.stream().allMatch(Task::isCompleted)) {
-			throw new NotCompletedException("완료되지 않은 참조 일감이 존재합니다.");
+			throw new NotCompletedException(NOT_COMPLETED_TASK);
 		}
 
 		isCompleted = true;

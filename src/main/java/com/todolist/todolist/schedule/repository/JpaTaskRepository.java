@@ -10,5 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface JpaTaskRepository extends JpaRepository<Task, Long>, TaskRepository {
 	Task findByTaskId(Long taskId);
+
 	Page<Task> findByUserOrderByCreatedAtDesc(User user, Pageable pageable);
 }
