@@ -33,6 +33,9 @@ dependencies {
 
 	compile group: 'com.google.guava', name: 'guava', version: '26.0-jre'
 
+	compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '2.0.4.RELEASE'
+
+
 	runtime('com.h2database:h2')
 	compileOnly('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
