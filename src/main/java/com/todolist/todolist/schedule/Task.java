@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,13 +17,23 @@ import java.util.stream.Collectors;
 @Data
 @ToString(exclude = {"childTasks"})
 @EqualsAndHashCode(of = "taskId")
+@Entity
 public class Task {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long taskId;
+
+	@ManyToOne
 	private User user;
+
 	private String message;
 	private boolean isCompleted;
+
+	@ManyToMany( cascade = { CascadeType.ALL } )
 	private List<Task> parentTasks = new ArrayList<>();
+
 	@JsonIgnore
+	@ManyToMany( cascade = { CascadeType.ALL } )
 	private List<Task> childTasks = new ArrayList<>();
 	private Date createdAt = new Date();
 	private Date updatedAt = new Date();
@@ -67,5 +78,10 @@ public class Task {
 		}
 
 		return "@" + String.join(" @", parentTasks.stream().map(task -> task.getTaskId().toString()).collect(Collectors.toList()));
+	}
+
+	@PreUpdate
+	void onUpdate() {
+		setUpdatedAt(new Date());
 	}
 }

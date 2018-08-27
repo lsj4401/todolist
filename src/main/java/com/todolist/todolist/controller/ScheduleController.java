@@ -3,17 +3,31 @@ package com.todolist.todolist.controller;
 import com.todolist.todolist.schedule.Scheduler;
 import com.todolist.todolist.schedule.Task;
 import com.todolist.todolist.user.User;
+import com.todolist.todolist.user.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
+
 @RestController
 @RequestMapping(value = "/schedule")
 public class ScheduleController {
 
-	private static final User USER = new User();
-	private Scheduler scheduler = new Scheduler();
+	private static User USER;
+
+	@Autowired
+	private Scheduler scheduler;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@PostConstruct
+	public void init() {
+		USER = userRepository.save(new User());
+	}
 
 	@PostMapping
 	public Task addTask(@RequestBody String message) {
